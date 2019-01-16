@@ -36,7 +36,7 @@ var globalModulePath =  path.join(__dirname, '..')
   if(initSuccessful) {
     // Print succesfull
     console.log(config.terminal_colors.green,'----------------------------');
-    console.log(config.terminal_colors.green,'✔ Initialization successfuuuuul');
+    console.log(config.terminal_colors.green,'✔ Initialization successful');
     console.log(config.terminal_colors.green,'----------------------------');
     console.log(config.terminal_colors.white, 'Please check beaConfig.js if you want a different folder structure, provide the path to the server.js/app.js, controllers/routes folder and models folder.');
     return true;
@@ -311,6 +311,7 @@ var globalModulePath =  path.join(__dirname, '..')
 
 actions.test = () => {
   console.log('Running test....')
+  return true;
 }
 
 actions.buildSchema = () => {
