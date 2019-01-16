@@ -10,7 +10,7 @@ var globalModulePath =  path.join(__dirname, '..')
 /**
  * Initializes the current directory with all the files needed.
  */
-actions.init = () => {
+ actions.init = () => {
   var initSuccessful = true;
   if(!fs.existsSync('./rest')) {
     // Create folder structure
@@ -52,7 +52,7 @@ actions.init = () => {
  * Creates a new plain api controller in rest/controllers with get and post
  * @param {*String} controllerName 
  */
-actions.createPlainController = (controllerName) => {
+ actions.createPlainController = (controllerName) => {
   // First load the config file to know where to create controllers
   var beaConfig = helpers.loadBeaConfig();
   // If /rest/controllers doesn't exist return
@@ -120,7 +120,7 @@ actions.createPlainController = (controllerName) => {
  * @param {*String} controllerName 
  * @param {*Object} routes 
  */
-actions.createControllerWithCustomRoutes = (controllerName, routes) => {
+ actions.createControllerWithCustomRoutes = (controllerName, routes) => {
   // First load the config file to know where to create controllers
   var beaConfig = helpers.loadBeaConfig();
   
@@ -140,8 +140,8 @@ actions.createControllerWithCustomRoutes = (controllerName, routes) => {
   // Only create controller if it doesn't exist already
   if(!fs.existsSync(beaConfig.controllersPath+'/'+fullControllerName+'.js')) {
 
-      var basicControllerName = fullControllerName.replace('Controller','');
-      var routesString = '';
+    var basicControllerName = fullControllerName.replace('Controller','');
+    var routesString = '';
     
       // Go through all of the routes and create them
       for(var prop in routes) {
@@ -149,21 +149,21 @@ actions.createControllerWithCustomRoutes = (controllerName, routes) => {
         var lowercaseMethod = routes[prop].toLowerCase();
 
         routesString += `// ${lowercaseMethod} /api/${basicControllerName}/${lowercaseProp}
-router.${lowercaseMethod}('/${lowercaseProp}',(req,res) => {
-  res.send('${lowercaseMethod} ${lowercaseProp}');
-});
+        router.${lowercaseMethod}('/${lowercaseProp}',(req,res) => {
+          res.send('${lowercaseMethod} ${lowercaseProp}');
+        });
 
-`;
+        `;
       }
 
       // Push the routes in the rest
       var routesControllerText = `// ${basicControllerName} controller routes
-var express = require('express');
-var router = express.Router();
+      var express = require('express');
+      var router = express.Router();
 
-${routesString}
-module.exports = router;
-`;
+      ${routesString}
+      module.exports = router;
+      `;
 
       fs.writeFileSync(beaConfig.controllersPath+'/'+fullControllerName+'.js',routesControllerText);
 
@@ -179,33 +179,33 @@ module.exports = router;
       arrayOfLines.splice(++index,0,"\n");
       arrayOfLines.splice(++index,0,"var "+ fullControllerName + " = require('"+beaConfig.controllersPath+"/"+fullControllerName+"');");
       arrayOfLines.splice(++index,0,"app.use('/api/"+basicControllerName+"', "+fullControllerName+");");
-  
+
       var newServerText = arrayOfLines.join('\n');
       fs.writeFileSync(beaConfig.serverPath,newServerText);
-  }
-  else success = false;
+    }
+    else success = false;
 
-  if(success) {
-    console.log(config.terminal_colors.green,'----------------------------');
-    console.log(config.terminal_colors.green,'✔ '+fullControllerName+' created successfully, check '+beaConfig.controllersPath+'/'+fullControllerName+'.js');
-    console.log(config.terminal_colors.green,'----------------------------');
-    console.log(config.terminal_colors.white);
-    return true;
-  }
-  else {
-    console.log(config.terminal_colors.red,"✖ Controller "+fullControllerName+" already exists.");
-    console.log(config.terminal_colors.white);
-    return false;
-  }
+    if(success) {
+      console.log(config.terminal_colors.green,'----------------------------');
+      console.log(config.terminal_colors.green,'✔ '+fullControllerName+' created successfully, check '+beaConfig.controllersPath+'/'+fullControllerName+'.js');
+      console.log(config.terminal_colors.green,'----------------------------');
+      console.log(config.terminal_colors.white);
+      return true;
+    }
+    else {
+      console.log(config.terminal_colors.red,"✖ Controller "+fullControllerName+" already exists.");
+      console.log(config.terminal_colors.white);
+      return false;
+    }
 
-}
+  }
 
 /**
  * Adds the routes to the controller provided
  * @param {*String} controllerName 
  * @param {*Object} routes 
  */
-actions.addRoutes = (controllerName,routes) => {
+ actions.addRoutes = (controllerName,routes) => {
   // First load the config file to know where to create controllers
   var beaConfig = helpers.loadBeaConfig();
 
@@ -240,26 +240,26 @@ actions.addRoutes = (controllerName,routes) => {
 
     arrayOfLines.splice(index,0,`// ${lowercaseMethod} /api/${basicControllerName}/${lowercaseProp}`);
     arrayOfLines.splice(++index,0,`router.${lowercaseMethod}('/${lowercaseProp}',(req,res) => {`);
-    arrayOfLines.splice(++index,0," ");
-    arrayOfLines.splice(++index,0,'});\n');
-    index++;
+      arrayOfLines.splice(++index,0," ");
+      arrayOfLines.splice(++index,0,'});\n');
+      index++;
+    }
+    var newControllerText = arrayOfLines.join('\n');
+    fs.writeFileSync(beaConfig.controllersPath+'/'+fullControllerName+'.js',newControllerText);
+
+    console.log(config.terminal_colors.green,'----------------------------');
+    console.log(config.terminal_colors.green,'✔ Routes added successfully, check '+beaConfig.controllersPath+'/'+fullControllerName+'.js');
+    console.log(config.terminal_colors.green,'----------------------------');
+    console.log(config.terminal_colors.white);
+    return true;
   }
-  var newControllerText = arrayOfLines.join('\n');
-  fs.writeFileSync(beaConfig.controllersPath+'/'+fullControllerName+'.js',newControllerText);
-  
-  console.log(config.terminal_colors.green,'----------------------------');
-  console.log(config.terminal_colors.green,'✔ Routes added successfully, check '+beaConfig.controllersPath+'/'+fullControllerName+'.js');
-  console.log(config.terminal_colors.green,'----------------------------');
-  console.log(config.terminal_colors.white);
-  return true;
-}
 
 /**
  * Creates new model in rest/models
  * @param {*String} name 
  * @param {*String} props 
  */
-actions.createModel = (name,props) => {
+ actions.createModel = (name,props) => {
 
   // First load the config file to know where to create controllers
   var beaConfig = helpers.loadBeaConfig();
@@ -296,7 +296,7 @@ actions.createModel = (name,props) => {
 /**
  * Creates beaConfig.json in root directory
  */
-actions.createConfig = () => {
+ actions.createConfig = () => {
   var created = helpers.createBeaConfig();
   if (!created) {
     console.log(config.terminal_colors.red,"✖ beaConfig.json already exists");
@@ -307,6 +307,10 @@ actions.createConfig = () => {
     console.log(config.terminal_colors.white);
   }
   return created;
+}
+
+actions.test = () => {
+  console.log('Running test....')
 }
 
 actions.buildSchema = () => {
@@ -332,8 +336,8 @@ actions.buildSchema = () => {
       }
       else {
         console.log(config.terminal_colors.red,"✖ Schema is not in valid format, please check beaConfig.json, or https://github.com/ognjengt/build-express-api documentation to see how to write schema in a correct format. Additional message: Some controller routes aren't in correct format.");
-      console.log(config.terminal_colors.white);
-  
+        console.log(config.terminal_colors.white);
+
         result = false; 
         return;
       }
